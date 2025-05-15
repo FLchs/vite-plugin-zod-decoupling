@@ -1,6 +1,21 @@
 {
   "name": "vite-plugin-zod-decoupling",
+  "version": "0.0.2-1",
   "module": "./src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "zod",
+    "vite",
+    "vite-plugin"
+  ],
+  "author": "François Lachèse",
+  "license": "MIT",
+  "homepage": "https://github.com/FLchs/vite-plugin-zod-decoupling",
+  "scripts": {
+    "build": "bun build --target=node ./src/index.ts --outfile=dist/index.js && bun run build:declaration",
+    "build:declaration": "tsc --emitDeclarationOnly --project tsconfig.types.json"
+  },
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest"
@@ -10,6 +25,7 @@
   },
   "dependencies": {
     "json-schema-to-zod": "^2.6.1",
+    "zod": "^3.24.4",
     "zod-to-json-schema": "^3.24.5"
   }
 }
