@@ -3,8 +3,15 @@ import { ZodType } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
 
-function isZodSchema(obj: unknown): obj is ZodType {
-  return obj instanceof ZodType;
+export function isZodSchema(obj: unknown): obj is ZodType {
+  return (
+    typeof obj === "object" &&
+    obj !== null &&
+    "_def" in obj &&
+    "parse" in obj &&
+    typeof (obj as any)._def === "object" &&
+    typeof (obj as any).parse === "function"
+  );
 }
 
 export default function ZodDecoupling(regex: RegExp) {
