@@ -1,6 +1,11 @@
-import jsonSchemaToZod from "json-schema-to-zod";
+import jsonSchemaToZod, { type JsonSchema } from "json-schema-to-zod";
+import { ZodType } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
+
+function isZodSchema(obj: unknown): obj is ZodType {
+  return obj instanceof ZodType;
+}
 
 export default function ZodDecoupling(regex: RegExp) {
   return {
@@ -9,15 +14,15 @@ export default function ZodDecoupling(regex: RegExp) {
       if (regex.test(id)) {
         console.log("Decoupling " + id);
         try {
-          const data = await import(id);
-          const jsonSchema = zodToJsonSchema(data.default, "Schema");
-          const zschema = jsonSchema?.definitions?.[0] as unknown;
-          if (!zschema) throw new Error("Schema not found");
-          const outputSchema = jsonSchemaToZod(zschema, {
-            module: "esm",
-            type: false,
-          });
-          return outputSchema;
+          const fileExports = await import(id);
+          const output = Object.entries(fileExports).reduce((acc, [name, obj]) => {
+            if (!isZodSchema(obj)) return acc;
+            const jsonSchema = zodToJsonSchema(obj) as JsonSchema;
+            const outputSchema = jsonSchemaToZod(jsonSchema)
+            return acc + `export const ${name} = ${outputSchema};\n`;
+          }, 'import {z} from "zod";\n');
+
+          return output;
         } catch (error) {
           console.log(error);
           return src;
