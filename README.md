@@ -4,6 +4,8 @@
 
 Why ? It was mainly made to prevent leaking database schemas and dependencies when reusing schema generated from [drizzle-zod](https://orm.drizzle.team/docs/zod) in the front end.
 
+> **Warning:** This plugin is a highly experimental proof of concept. Do not use in profuction, in fact do not use at all.
+
 ## Installation
 
 To install the plugin, use your favorite package manager:
@@ -73,7 +75,7 @@ export const userSelectSchema = z
   .strict();
 ```
 
-> **Warning:** `.schema.ts` files must only export Zod schemas. Ensure that these files do not contain any other exports as the transformed files will not contains those exports.
+> **Warning:** `.schema.ts` files must only export Zod schemas. Ensure that these files do not contain any other exports as the transformed files will not contains those exports. Also, some data might get lost during the decoupling, more info on the [zod-to-json-schema](https://www.npmjs.com/package/zod-to-json-schema) and [json-schema-to-zod](https://www.npmjs.com/package/json-schema-to-zod) pages.
 
 ## License
 
